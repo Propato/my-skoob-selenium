@@ -1,0 +1,3 @@
+[submodule "my-skoob"]
+	path = my-skoob
+	url = https://github.com/Propato/my-skoob.git
