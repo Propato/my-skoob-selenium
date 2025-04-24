@@ -1,0 +1,29 @@
+reviews:
+  stage: Tests
+
+  rules:
+    - if: '$MANUAL == "true"'
+      when: manual
+    - if: '$RUN == "false"'
+      when: never
+    - when: on_success
+  allow_failure: true
+
+  script:
+    - echo "Testando os códigos de $CI_JOB_NAME"
+    - pytest --verbose --junitxml=reports/$CI_JOB_NAME-report.xml -o junit_logging=all --reruns $N_RERUNS -n $WORKERS tests/$CI_JOB_NAME/
+
+  timeout: 20m
+
+  needs:
+    - job: build
+
+  artifacts:
+    when: always
+    paths:
+      - prints/
+      - reports/$CI_JOB_NAME-report.xml
+      - reports/report.txt
+    reports:
+      junit: reports/$CI_JOB_NAME-report.xml
+    expire_in: 1 week

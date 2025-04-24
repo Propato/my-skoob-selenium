@@ -1,0 +1,13 @@
+{
+    "url_base": "https://localhost/",
+    "login": {
+        "user": {
+            "user": "user",
+            "password": "#User123"
+        },
+        "admin": {
+            "user": "admin",
+            "password": "#Admin123"
+        }
+    }
+}

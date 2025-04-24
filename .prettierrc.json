@@ -1,0 +1,17 @@
+{
+    "semi": true,
+    "singleQuote": false,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "vueIndentScriptAndStyle": true,
+    "arrowParens": "always",
+    "trailingComma": "all",
+    "overrides": [
+        {
+            "files": ["*.yml", "*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}

@@ -1,0 +1,64 @@
+image: python:3.13-alpine3
+
+include:
+  - local: "cicd-jobs/**.yml"
+
+variables:
+  RUN: "false"
+  MANUAL: "false"
+  WORKERS: "auto"
+  N_RERUNS: "1"
+
+stages:
+  - Build
+  - Tests
+  - Reruns
+  - Report
+
+Build:
+  stage: build
+
+  rules:
+    - if: '$MANUAL == "true"'
+      when: manual
+    - if: '$RUN == "false"'
+      when: never
+    - when: always
+
+  script:
+    - echo "Init: Build"
+
+  after_script:
+    - if [ "$CI_JOB_STATUS" == "failed" ]; then
+      echo "Build Tests Error"
+      fi
+
+  timeout: 15m
+
+Report:
+  stage: Report
+
+  rules:
+    - if: '$MANUAL == "true"'
+      when: manual
+    - if: '$RUN == "false"'
+      when: never
+    - when: on_success
+
+  needs:
+    - job: build
+
+    - job: reruns
+      artifacts: true
+      optional: true
+
+  artifacts:
+    when: always
+    paths:
+      - prints/
+      - reports/*.txt
+
+  script:
+    - echo "Report"
+
+  timeout: 10m
