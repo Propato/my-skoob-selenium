@@ -1,0 +1,167 @@
+services:
+  # FRONTEND - Vue.js
+  skoob-frontend:
+    build: ./my-skoob/
+    container_name: skoob-frontend
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./my-skoob/my-skoob-frontend/src:/app/src
+      # - ./my-skoob-frontend/public:/app/public
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+    networks:
+      - skoob-tests-network
+    depends_on:
+      - skoob-backend
+
+  # BACKEND - Django
+  skoob-backend:
+    build: ./my-skoob/my-skoob-backend/app
+    container_name: skoob-backend
+    command: ["runserver", "0.0.0.0:4000"]
+    volumes:
+      - ./my-skoob/my-skoob-backend/app:/app
+      - ./my-skoob/my-skoob-backend/data/web/static:/data/web/static/
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./.env
+    networks:
+      - skoob-tests-network
+    depends_on:
+      - skoob-psql
+
+  # DATABASE - PostgreSQL
+  skoob-psql:
+    image: postgres:13-alpine
+    container_name: skoob-psql
+    volumes:
+      - ./my-skoob/my-skoob-backend/data/postgres/data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    networks:
+      - skoob-tests-network
+
+  python:
+    container_name: myTester
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    build: ./
+    # image: image-skoob-tester
+    env_file:
+      - ./.env
+    volumes:
+      - "./tests:/app/tests"
+      - "./prints:/app/prints"
+      - "./reports:/app/reports/"
+      - "./data.json:/app/data.json"
+    # extra_hosts:
+    #   - "selenium_hub:selenium-hub"
+    networks:
+      - skoob-tests-network
+
+  selenium-hub:
+    image: selenium/hub:4.0.0
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    networks:
+      - skoob-tests-network
+
+  chrome-1:
+    image: selenium/node-chrome:latest
+    container_name: chrome-1
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+    ports:
+      - "5900:5900"
+    # extra_hosts:
+    #   - "localhost.test:172.20.0.4"
+    networks:
+      - skoob-tests-network
+  chrome-2:
+    image: selenium/node-chrome:latest
+    container_name: chrome-2
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+    ports:
+      - "5901:5900"
+    # extra_hosts:
+    #   - "localhost.test:172.20.0.4"
+    networks:
+      - skoob-tests-network
+  chrome-3:
+    image: selenium/node-chrome:latest
+    container_name: chrome-3
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+    ports:
+      - "5902:5900"
+    # extra_hosts:
+    #   - "localhost.test:172.20.0.4"
+    networks:
+      - skoob-tests-network
+
+  # edge:
+  #   image: selenium/node-edge:latest
+  #   container_name: edge
+  #   shm_size: 2gb
+  #   depends_on:
+  #     - selenium-hub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=selenium-hub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #     - SE_NODE_MAX_SESSIONS=2
+  #   ports:
+  #     - "5903:5900"
+  #   extra_hosts:
+  #     - "localhost:172.20.0.4"
+  #   networks:
+  #     - skoob-tests-network
+  # firefox:
+  #   image: selenium/node-firefox:latest
+  #   container_name: firefox
+  #   shm_size: 2gb
+  #   depends_on:
+  #     - selenium-hub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=selenium-hub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #     - SE_NODE_MAX_SESSIONS=1
+  #   ports:
+  #     - "5904:5900"
+  #   extra_hosts:
+  #     - "localhost:172.20.0.4"
+  #   networks:
+  #     - skoob-tests-network
+
+networks:
+  skoob-tests-network:
+    name: skoob-tests-network
+    driver: bridge

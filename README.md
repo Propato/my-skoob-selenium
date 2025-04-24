@@ -90,8 +90,10 @@ And you will see:
 ## Problemas e To-Do
 
 -   [ ] Configurar gitlab runner;
--   [ ] Configurar github runner;
+-   [ ] Configurar github workflow;
 -   [ ] Add tests;
+-   [ ] Add Option in Menu to run tests set.
+-   [ ] Add Option in Menu to run tests by module.
 -   [ ] Add Selenium Debug.
 -   [ ] Add Selenium Video.
 
