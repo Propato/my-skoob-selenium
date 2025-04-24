@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from tests.baseClasses.TestBase import TestBase
 
 
-class TestReviewExemplo(TestBase):
+class TestReviewExample(TestBase):
     # ========== Main Function ========== #
     def test_ReviewExample(self):
         self.directory = os.path.basename(os.path.dirname(os.path.abspath(__file__)))  # Set Directory

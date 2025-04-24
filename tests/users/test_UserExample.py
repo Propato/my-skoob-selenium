@@ -1,16 +1,17 @@
 # Standard imports
-import os
+import sys, os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 # Imports specific to this test
 
-from tests.baseClasses.TestBase import TestBase
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "baseClasses"))
+from TestBase import TestBase
 
 
-class TestUserExemplo(TestBase):
+class TestUserExample(TestBase):
     # ========== Main Function ========== #
-    def test_UserExemplo(self):
+    def test_UserExample(self):
         self.directory = os.path.basename(os.path.dirname(os.path.abspath(__file__)))  # Set Directory
 
         self.Start(tab="Home")

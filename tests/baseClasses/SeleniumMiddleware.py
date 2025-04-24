@@ -22,7 +22,7 @@ class SeleniumMiddleware:
             options.add_argument("--headless")
             options.add_argument("--disable-gpu")
 
-        self.driver = webdriver.Remote(command_executor="http://selenium_hub:4444/wd/hub", options=options)
+        self.driver = webdriver.Remote(command_executor="http://selenium-hub:4444/wd/hub", options=options)
 
         self.testName = method.__name__
         self.directory = os.path.basename(os.path.dirname(__file__))

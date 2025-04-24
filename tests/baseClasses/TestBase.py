@@ -2,7 +2,7 @@ import json
 import os
 from selenium.webdriver.common.by import By
 
-from tests.baseClasses.SeleniumMiddleware import SeleniumMiddleware
+from SeleniumMiddleware import SeleniumMiddleware
 
 
 class TestBase(SeleniumMiddleware):
@@ -43,11 +43,11 @@ class TestBase(SeleniumMiddleware):
         tab="",
     ):
         if url == "":
-            url = self.data["url"]
+            url = self.data["url_base"]
         if user == "":
-            user = self.data["user"]
+            user = self.data["login"]["user"]["email"]
         if password == "":
-            password = self.data["password"]
+            password = self.data["login"]["user"]["password"]
 
         # Try-Except: Try again if something went wrong
         try:

@@ -8,9 +8,9 @@ from selenium.webdriver.common.keys import Keys
 from tests.baseClasses.TestBase import TestBase
 
 
-class TestBookExemplo(TestBase):
+class TestBookExample(TestBase):
     # ========== Main Function ========== #
-    def test_BookExemplo(self):
+    def test_BookExample(self):
         self.directory = os.path.basename(os.path.dirname(os.path.abspath(__file__)))  # Set Directory
 
         self.Start(tab="Home")
