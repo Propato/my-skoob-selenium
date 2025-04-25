@@ -1,19 +1,18 @@
 # Standard imports
 import os
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+
+# Imports the TestBase class from baseClasses
+from baseClasses.BaseTest import BaseTest
 
 # Imports specific to this test
 
-from tests.baseClasses.TestBase import TestBase
 
-
-class TestReviewExample(TestBase):
+class TestReviewExample(BaseTest):
     # ========== Main Function ========== #
     def test_ReviewExample(self):
         self.directory = os.path.basename(os.path.dirname(os.path.abspath(__file__)))  # Set Directory
 
-        self.Start(tab="Home")
+        self.Start(tab="Reviews")
 
         self.sleep(5)
 

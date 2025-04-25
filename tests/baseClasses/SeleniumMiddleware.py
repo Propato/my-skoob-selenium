@@ -27,6 +27,9 @@ class SeleniumMiddleware:
         self.testName = method.__name__
         self.directory = os.path.basename(os.path.dirname(__file__))
 
+        self.By = By
+        self.Keys = Keys
+
     def teardown_method(self, method):
         try:
             self.driver.save_screenshot(f"./prints/{self.directory}/{self.testName}.png")
@@ -42,8 +45,8 @@ class SeleniumMiddleware:
     ################################ USEFUL FUNCTIONS ###############################
     #################################################################################
 
-    def sleep(self, time=1):
-        time.sleep(time)
+    def sleep(self, sleep=1):
+        time.sleep(sleep)
 
     def script(self, script):
         self.driver.execute_script(script)
@@ -63,28 +66,28 @@ class SeleniumMiddleware:
     ############################# INTERACTION FUNCTIONS #############################
     #################################################################################
 
-    def click(self, element, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).click()
+    def click(self, element, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).click()
 
-    def clear(self, element, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).clear()
+    def clear(self, element, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).clear()
 
-    def press_key(self, element, key, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).send_keys(key)
+    def press_key(self, element, key, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).send_keys(key)
 
-    def send_text(self, element, text, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).clear()
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).send_keys(text)
+    def send_text(self, element, text, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).clear()
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).send_keys(text)
 
-    def send_date(self, element, date, time=10, limit=5):
+    def send_date(self, element, date, wait=10, limit=5):
         formatted_date = f"{date[:2]}/{date[2:4]}/{date[4:]}"
 
         while limit > 0:
-            WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).clear()
-            WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).send_keys(date)
+            WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).clear()
+            WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).send_keys(date)
             time.sleep(1)
             if (
-                WebDriverWait(self.driver, time)
+                WebDriverWait(self.driver, wait)
                 .until(expected_conditions.element_to_be_clickable(element))
                 .get_attribute("value")
                 == formatted_date
@@ -95,27 +98,27 @@ class SeleniumMiddleware:
         if limit <= 0:
             print(
                 "Value: ",
-                WebDriverWait(self.driver, time)
+                WebDriverWait(self.driver, wait)
                 .until(expected_conditions.element_to_be_clickable(element))
                 .get_attribute("value"),
             )
             raise Exception("Set Date: Limit exceeded")
 
-    def accept_alert(self, time=10, delay=1):
-        self.delay(delay)
-        WebDriverWait(self.driver, time).until(lambda driver: driver.switch_to.alert).accept()
-        self.delay(delay)
+    def accept_alert(self, wait=10, sleep=1):
+        time.sleep(sleep)
+        WebDriverWait(self.driver, wait).until(lambda driver: driver.switch_to.alert).accept()
+        time.sleep(sleep)
 
     #################################################################################
     ############################## GET VALUES FUNCTIONS #############################
     #################################################################################
 
-    def get_text(self, element, time=10):
-        return WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element)).text
+    def get_text(self, element, wait=10):
+        return WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element)).text
 
-    def get_attribute(self, element, attribute, time=10):
+    def get_attribute(self, element, attribute, wait=10):
         return (
-            WebDriverWait(self.driver, time)
+            WebDriverWait(self.driver, wait)
             .until(expected_conditions.element_to_be_clickable(element))
             .get_attribute(attribute)
         )
@@ -124,44 +127,44 @@ class SeleniumMiddleware:
     ################################ SELECT FUNCTIONS ###############################
     #################################################################################
 
-    def select_option(self, element, text, time=10):
+    def select_option(self, element, text, wait=10):
         Select(
-            WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element))
+            WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element))
         ).select_by_visible_text(text)
 
-    def get_select_num_options(self, element, time=10):
+    def get_select_num_options(self, element, wait=10):
         return len(
-            WebDriverWait(self.driver, time)
+            WebDriverWait(self.driver, wait)
             .until(expected_conditions.element_to_be_clickable(element))
             .find_elements(By.TAG_NAME, "option")
         )
 
-    def get_selected_text(self, element, time=10):
+    def get_selected_text(self, element, wait=10):
         return Select(
-            WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element))
+            WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element))
         ).first_selected_option.text
 
     #################################################################################
     ################################ AWAIT FUNCTIONS ################################
     #################################################################################
 
-    def await_text(self, element, text, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.text_to_be_present_in_element(element, text))
+    def await_text(self, element, text, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.text_to_be_present_in_element(element, text))
 
-    def await_attribute_not_empty(self, element, attribute, time=10):
-        WebDriverWait(self.driver, time).until(
+    def await_attribute_not_empty(self, element, attribute, wait=10):
+        WebDriverWait(self.driver, wait).until(
             lambda driver: driver.find_element(element[0], element[1]).get_attribute(attribute) != ""
         )
 
-    def await_clickable(self, element, time=10):
-        WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable(element))
+    def await_clickable(self, element, wait=10):
+        WebDriverWait(self.driver, wait).until(expected_conditions.element_to_be_clickable(element))
 
-    def await_n_window(self, n=1, time=30):
-        WebDriverWait(self.driver, time).until(lambda driver: len(driver.window_handles) > n)
+    def await_n_window(self, n=1, wait=30):
+        WebDriverWait(self.driver, wait).until(lambda driver: len(driver.window_handles) > n)
 
-    def await_load(self, xpath, time=10):
+    def await_load(self, xpath, wait=10):
         time.sleep(1)
-        WebDriverWait(self.driver, time).until(
+        WebDriverWait(self.driver, wait).until(
             lambda driver: False if driver.find_elements(By.XPATH, xpath) else True
         )  # Wait for loading component to close
         time.sleep(1)
@@ -173,8 +176,8 @@ class SeleniumMiddleware:
     def switch_to_window(self, window=0):
         self.driver.switch_to.window(self.driver.window_handles[window])
 
-    def switch_to_frame(self, frame=1, time=30):
-        WebDriverWait(self.driver, time).until(lambda driver: driver.switch_to.frame(frame) or True)
+    def switch_to_frame(self, frame=1, wait=30):
+        WebDriverWait(self.driver, wait).until(lambda driver: driver.switch_to.frame(frame) or True)
 
-    def switch_to_default(self, time=30):
-        WebDriverWait(self.driver, time).until(lambda driver: driver.switch_to.default_content() or True)
+    def switch_to_default(self, wait=30):
+        WebDriverWait(self.driver, wait).until(lambda driver: driver.switch_to.default_content() or True)

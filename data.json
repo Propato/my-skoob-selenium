@@ -1,5 +1,5 @@
 {
-    "url_base": "https://skoob-frontend/3000",
+    "url_base": "http://skoob-frontend:3000",
     "login": {
         "user": {
             "email": "email@email.com",

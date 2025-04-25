@@ -1,11 +1,10 @@
 import json
 import os
-from selenium.webdriver.common.by import By
 
-from SeleniumMiddleware import SeleniumMiddleware
+from baseClasses.SeleniumMiddleware import SeleniumMiddleware
 
 
-class TestBase(SeleniumMiddleware):
+class BaseTest(SeleniumMiddleware):
     def setup_method(self, method):
         super().setup_method(method)
 
@@ -26,7 +25,7 @@ class TestBase(SeleniumMiddleware):
             super().teardown_method(method)
 
     def NavBar(self, tab):
-        self.click((By.LINK_TEXT, tab))
+        self.click((self.By.LINK_TEXT, tab))
         self.sleep()
 
     def Login(self, user, password):
@@ -56,6 +55,10 @@ class TestBase(SeleniumMiddleware):
             self.refresh()
             self.open_url(url)
         self.sleep(1)
+
+        self.script(
+            'window.localStorage.setItem("user", JSON.stringify({ token: "seu_token_fake" }));'
+        )  # This is required to 'initialize' local storage on selenium nodes
 
         # Try-Except: Try again if something went wrong
         try:
