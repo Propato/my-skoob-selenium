@@ -13,7 +13,7 @@ RUN python -m venv /venv && \
   /venv/bin/pip install --upgrade pip && \
   /venv/bin/pip install -r /app/requirements.txt && \
   adduser --disabled-password --no-create-home duser && \
-  chown -R duser:duser /venv
+  chown -R duser:duser /app /venv
 
 ENV PATH="/venv/bin:$PATH"
 

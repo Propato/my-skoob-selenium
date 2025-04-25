@@ -103,7 +103,8 @@ DB_CONTAINER=skoob-psql
 
 PS3=$'\n Select Option: '
 select OPTIONS in \
-    "Start Local Environment" \
+    "Build Local Environment" \
+    "Relaunch Chrome Containers" \
     "Run Single Test" \
     "Run All Tests" \
     "Delete Data" \
@@ -112,10 +113,11 @@ select OPTIONS in \
     "Close"; do
 
 case $OPTIONS in
-    "Start Local Environment")
+    "Build Local Environment")
         clear
 
-        git pull origin main
+        cd $SKOOB_DIRECTORY
+        # git pull origin main
         git submodule update --init --recursive
         cd $SKOOB_DIRECTORY
         git pull origin main
@@ -126,6 +128,22 @@ case $OPTIONS in
         echo ""
 
         echo "Local Environment Ready!"
+        read -p "[Press Enter to Close]"
+        clear
+        COLUMNS=1
+        ;;
+
+    "Relaunch Chrome Containers")
+        clear
+
+        echo "Stopping chrome containers..."
+        sudo docker container stop chrome-1 chrome-2 chrome-3
+        echo "Removing chrome containers..."
+        sudo docker container rm chrome-1 chrome-2 chrome-3
+        sudo docker compose up -d
+
+        echo ""
+        echo "Containers Ready!"
         read -p "[Press Enter to Close]"
         clear
         COLUMNS=1
